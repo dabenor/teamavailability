@@ -14,12 +14,12 @@ services:
       - 3000:3000
 
   database:
-    image: postgres:13
+    image: postgres:16.4
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: youruser
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_USER: testdbuser
+      POSTGRES_PASSWORD: testdbpassword
       POSTGRES_DB: team_availability_db
     volumes:
       - pgdata:/var/lib/postgresql/data

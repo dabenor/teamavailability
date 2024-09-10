@@ -1,25 +1,22 @@
-# Use an official Node.js runtime as the base image
-FROM node:20-alpine
+FROM node:20-slim
 
-# Set the working directory inside the container
+# set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-# Copy pnpm-lock to working directory
-COPY pnpn-lock.yaml ./
+# copy package.json and package-lock.json to working directory
+COPY package.json .
 
-# Install dependencies
-RUN pnpm install
+# install dependencies
+RUN npm install
 
-# Copy the rest of the application code to the working directory
+# install serve globally
+RUN npm i -g serve
+
 COPY . .
 
-# Build the React app
-RUN pnpm run build
+# build web app
+RUN npm run build
 
-# Expose the port that the app will run on
 EXPOSE 3000
-
-# Define the command to start the app
-CMD ["pnpm", "start"]
+# serve requests
+CMD [ "serve", "-s", "dist" ]
