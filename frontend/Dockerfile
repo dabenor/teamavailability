@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -22,12 +22,4 @@ RUN pnpm run build
 EXPOSE 3000
 
 # Define the command to start the app
-CMD ["npm", "start"]
-# Install pnpm
-RUN npm install -g pnpm
-
-# Install dependencies using pnpm
-RUN pnpm install
-
-# Build the React app
-RUN pnpm run build
+CMD ["pnpm", "start"]
