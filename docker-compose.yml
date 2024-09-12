@@ -1,20 +1,25 @@
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile  # This Dockerfile will build the frontend
+    volumes:
+      - ./frontend/dist:/app/dist  # Share the built frontend with the home machine
+    command: pnpm run build 
+
   backend:
     build:
       context: ./backend
     ports:
       - 8000:8000
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+      frontend:
+        condition: service_completed_successfully
+
     volumes:
       - ./frontend/dist:/app/frontend/dist
-
-
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #   ports:
-  #     - 3000:3000
 
   database:
     image: postgres:16.4
@@ -26,5 +31,12 @@ services:
       POSTGRES_DB: team_availability_db
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./frontend/dist:/app/frontend/dist
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testdbuser -d team_availability_db"]
+      interval: 10s  # Check every 10 seconds
+      timeout: 5s    # Timeout after 5 seconds
+      retries: 5     # Try 5 times before marking as unhealthy
+
 volumes:
   pgdata:

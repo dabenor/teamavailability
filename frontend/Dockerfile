@@ -24,6 +24,3 @@ COPY . .
 # build web app
 RUN pnpm run build
 
-EXPOSE 3000
-# serve requests
-CMD [ "serve", "-s", "dist" ]
